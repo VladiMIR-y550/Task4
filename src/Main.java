@@ -3,52 +3,47 @@ import java.util.Scanner;
 public class Main {
     static int[] cell = new int[9];
     static int[] inputNumberCell = new int[1];
+    static boolean letsPlay = true;
 
     public static void main(String[] args) {
-        char[][] gameBoard = {{' ', '|', ' ', '|', ' '},
-                {'-', '+', '-', '+', '-'},
-                {' ', '|', ' ', '|', ' '},
-                {'-', '+', '-', '+', '-'},
-                {' ', '|', ' ', '|', ' '}};
-
-        while (true) {
-            printGameBoard(gameBoard);
-            System.out.println("Player 1 (plays X), please input number cell (1-9)");
-            int pos1 = checkInputPosition();
-            placeValue(gameBoard, pos1, "player1");
-            if (checkWinner(gameBoard, 'X')) {
-                printGameBoard(gameBoard);
+        while (letsPlay) {
+            GameBoard.printGameBoard();
+            System.out.println("Player 1 (plays X), please input number cell (1-9) or input 'end' for finish");
+            int pos1 = inputValid();
+            if(!letsPlay) {
+                System.out.println("Player1 finish the game!");
+                break;
+            }
+            GameBoard.placeValue(pos1, "player1");
+            if (GameBoard.checkWinner('X')) {
+                GameBoard.printGameBoard();
                 System.out.println("Congratulations Player 1. You Won!");
                 break;
             }
             if (checkDraw()) {
-                printGameBoard(gameBoard);
+                GameBoard.printGameBoard();
                 System.out.println("It's a draw");
                 break;
             }
 
-            printGameBoard(gameBoard);
-            System.out.println("Player 2 (plays O), please input number cell (1-9)");
-            int pos2 = checkInputPosition();
-            placeValue(gameBoard,pos2, "player2");
-            if (checkWinner(gameBoard, 'O')) {
-                printGameBoard(gameBoard);
+            GameBoard.printGameBoard();
+            System.out.println("Player 2 (plays O), please input number cell (1-9) or input 'end' for finish");
+            int pos2 = inputValid();
+            if(!letsPlay) {
+                System.out.println("Player2 finish the game!");
+                break;
+            }
+            GameBoard.placeValue(pos2, "player2");
+            if (GameBoard.checkWinner('O')) {
+                GameBoard.printGameBoard();
                 System.out.println("Congratulations Player 2. You Won!");
                 break;
             }
             if (checkDraw()) {
-                printGameBoard(gameBoard);
+                GameBoard.printGameBoard();
                 System.out.println("It's a draw");
                 break;
             }
-        }
-    }
-    public static void printGameBoard(char[][] gameBoard) {
-        for (char[] row : gameBoard) {
-            for (char column : row) {
-                System.out.print(column);
-            }
-            System.out.println();
         }
     }
     public static int inputValid() {
@@ -58,51 +53,53 @@ public class Main {
         boolean valid = false;
         while (!valid) {
             inputStr = scan.nextLine();
-            try {
-                int cell = Integer.parseInt(inputStr);
-                if (cell > 0 && cell <= 9) {
-                    playerPos = cell;
-                    valid = true;
-                } else {
-                    System.out.println("Wrong enter, please enter the number (1 - 9)");
+            if (inputStr.equals("end")) {
+                letsPlay = false;
+                break;
+            } else {
+                try {
+                    int cell = Integer.parseInt(inputStr);
+                    if (cell > 0 && cell <= 9) {
+                        if (checkDuplicatesCell(cell)) {
+                            recordCellMemory(cell);
+                            playerPos = cell;
+                            valid = true;
+                        } else {
+                            System.out.println("Position taken! Enter a correct Position");
+                        }
+                    } else {
+                        System.out.println("Wrong enter, please enter the number (1 - 9)");
+                    }
+                } catch (NumberFormatException e) {
+                    System.out.println("Please enter the number");
                 }
-            } catch (NumberFormatException e) {
-                System.out.println("Please enter the number");
             }
         }
         return playerPos;
     }
-    static int checkInputPosition() {
-        int checkingPos = 0;
-        boolean freePosition = false;
-        while (!freePosition) {
-            int pos = inputValid();
-            boolean checkDuplicates = checkDuplicatesCell(pos);
-            if (checkDuplicates) {
-                recordCellMemory(pos);
-                checkingPos = pos;
-                freePosition = true;
-            }
-        }
-        return checkingPos;
-    }
     static boolean checkDuplicatesCell(int pos) {
         inputNumberCell[0] = pos;
-        for (int j : cell) {
-            if (j == inputNumberCell[0]) {
-                System.out.println("Position taken! Enter a correct Position");
-                return false;
-            }
-        }
-        return true;
+        return inputNumberCell[0] != cell[0] && inputNumberCell[0] != cell[1] && inputNumberCell[0] != cell[2] && inputNumberCell[0] != cell[3] && inputNumberCell[0] != cell[4] && inputNumberCell[0] != cell[5] && inputNumberCell[0] != cell[6] && inputNumberCell[0] != cell[7] && inputNumberCell[0] != cell[8];
     }
     static void recordCellMemory(int pos) {
-        for (int i = 0; i < cell.length; i++) {
-            if (cell[i] == 0) {
-                cell[i] = pos;
-                break;
-            }
-
+        if (cell[0] == 0) {
+            cell[0] = pos;
+        }else if (cell[1] == 0) {
+            cell[1] = pos;
+        }else if (cell[2] == 0) {
+            cell[2] = pos;
+        }else if (cell[3] == 0) {
+            cell[3] = pos;
+        }else if (cell[4] == 0) {
+            cell[4] = pos;
+        }else if (cell[5] == 0) {
+            cell[5] = pos;
+        }else if (cell[6] == 0) {
+            cell[6] = pos;
+        }else if (cell[7] == 0) {
+            cell[7] = pos;
+        }else if (cell[8] == 0) {
+            cell[8] = pos;
         }
     }
     static boolean checkDraw() {
@@ -112,60 +109,5 @@ public class Main {
             }
         }
         return true;
-    }
-    public static void placeValue(char[][] gameBoard, int pos, String user) {
-        char symbol = ' ';
-        if (user.equals("player1")) {
-            symbol = 'X';
-        } else if (user.equals(("player2"))) {
-            symbol = 'O';
-        }
-        switch (pos) {
-            case 1:
-                gameBoard[0][0] = symbol;
-                break;
-            case 2:
-                gameBoard[0][2] = symbol;
-                break;
-            case 3:
-                gameBoard[0][4] = symbol;
-                break;
-            case 4:
-                gameBoard[2][0] = symbol;
-                break;
-            case 5:
-                gameBoard[2][2] = symbol;
-                break;
-            case 6:
-                gameBoard[2][4] = symbol;
-                break;
-            case 7:
-                gameBoard[4][0] = symbol;
-                break;
-            case 8:
-                gameBoard[4][2] = symbol;
-                break;
-            case 9:
-                gameBoard[4][4] = symbol;
-                break;
-            default:
-                break;
-        }
-    }
-    public static boolean checkWinner(char[][] gameBoard, char symbol) {
-        if (gameBoard[0][0] == symbol && gameBoard[0][2] == symbol && gameBoard[0][4] == symbol) {
-            return true;
-        } if (gameBoard[2][0] == symbol && gameBoard[2][2] == symbol && gameBoard[2][4] == symbol) {
-            return true;
-        } if (gameBoard[4][0] == symbol && gameBoard[4][2] == symbol && gameBoard[4][4] == symbol) {
-            return true;
-        } if (gameBoard[0][0] == symbol && gameBoard[2][0] == symbol && gameBoard[4][0] == symbol) {
-            return true;
-        } if (gameBoard[0][2] == symbol && gameBoard[2][2] == symbol && gameBoard[4][2] == symbol) {
-            return true;
-        } if (gameBoard[0][4] == symbol && gameBoard[2][4] == symbol && gameBoard[4][4] == symbol) {
-            return true;
-        }
-        return (gameBoard[0][0] == symbol && gameBoard[2][2] == symbol && gameBoard[4][4] == symbol) || (gameBoard[0][4] == symbol && gameBoard[2][2] == symbol && gameBoard[4][0] == symbol);
     }
 }
