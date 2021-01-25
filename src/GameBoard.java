@@ -15,9 +15,9 @@ public class GameBoard {
     }
     void placeValue(int pos, String user) {
         char symbol = ' ';
-        if (user.equals("player1")) {
+        if (user.equals(Players.PLAYER1.getMark())) {
             symbol = 'X';
-        } else if (user.equals(("player2"))) {
+        } else if (user.equals((Players.PLAYER2.getMark()))) {
             symbol = 'O';
         }
         switch (pos) {

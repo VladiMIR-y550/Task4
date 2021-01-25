@@ -1,28 +1,29 @@
 import java.util.Scanner;
 public class Main {
 
-    static int[] cell = new int[9];
-    static int[] inputNumberCell = new int[1];
-    static boolean letsPlay = true;
+    private final int[] cell = new int[9];
+    private boolean letsPlay = true;
+
 
     public static void main(String[] args) {
+        Main main = new Main();
         GameBoard gameBoard = new GameBoard();
 
-        while (letsPlay) {
+        while (main.letsPlay) {
             gameBoard.printGameBoard();
             System.out.println("Player 1 (plays X), please input number cell (1-9) or input 'end' for finish");
-            int pos1 = inputValid();
-            if(!letsPlay) {
+            int pos1 = main.inputValid();
+            if(!main.letsPlay) {
                 System.out.println("Player1 finish the game!");
                 break;
             } else {
-                gameBoard.placeValue(pos1, "player1");
+                gameBoard.placeValue(pos1, Players.PLAYER1.getMark());
             }
             if (gameBoard.checkWinner('X')) {
                 gameBoard.printGameBoard();
                 System.out.println("Congratulations Player 1. You Won!");
                 break;
-            } else if (checkDraw()) {
+            } else if (main.checkDraw()) {
                 gameBoard.printGameBoard();
                 System.out.println("It's a draw");
                 break;
@@ -30,25 +31,25 @@ public class Main {
 
             gameBoard.printGameBoard();
             System.out.println("Player 2 (plays O), please input number cell (1-9) or input 'end' for finish");
-            int pos2 = inputValid();
-            if(!letsPlay) {
+            int pos2 = main.inputValid();
+            if(!main.letsPlay) {
                 System.out.println("Player2 finish the game!");
                 break;
             } else {
-                gameBoard.placeValue(pos2, "player2");
+                gameBoard.placeValue(pos2, Players.PLAYER2.getMark());
             }
             if (gameBoard.checkWinner('O')) {
                 gameBoard.printGameBoard();
                 System.out.println("Congratulations Player 2. You Won!");
                 break;
-            } else if (checkDraw()) {
+            } else if (main.checkDraw()) {
                 gameBoard.printGameBoard();
                 System.out.println("It's a draw");
                 break;
             }
         }
     }
-    public static int inputValid() {
+    int inputValid() {
         Scanner scan = new Scanner(System.in);
         String inputStr;
         int playerPos = 0;
@@ -79,13 +80,12 @@ public class Main {
         }
         return playerPos;
     }
-    static boolean checkDuplicatesCell(int pos) {
-        inputNumberCell[0] = pos;
-        return inputNumberCell[0] != cell[0] && inputNumberCell[0] != cell[1] && inputNumberCell[0] != cell[2]
-                && inputNumberCell[0] != cell[3] && inputNumberCell[0] != cell[4] && inputNumberCell[0] != cell[5]
-                && inputNumberCell[0] != cell[6] && inputNumberCell[0] != cell[7] && inputNumberCell[0] != cell[8];
+    boolean checkDuplicatesCell(int pos) {
+        return pos != cell[0] && pos != cell[1] && pos != cell[2]
+                && pos != cell[3] && pos != cell[4] && pos != cell[5]
+                && pos != cell[6] && pos != cell[7] && pos != cell[8];
     }
-    static void recordCellMemory(int pos) {
+    void recordCellMemory(int pos) {
         if (cell[0] == 0) {
             cell[0] = pos;
         }else if (cell[1] == 0) {
@@ -106,7 +106,7 @@ public class Main {
             cell[8] = pos;
         }
     }
-    static boolean checkDraw() {
+    boolean checkDraw() {
         for (int n : cell) {
             if (n == 0) {
                 return false;
